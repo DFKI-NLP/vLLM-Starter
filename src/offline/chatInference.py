@@ -1,6 +1,6 @@
 #https://docs.vllm.ai/en/v0.6.3/getting_started/examples/offline_inference_chat.html
 from vllm import LLM, SamplingParams
-from src.other.utils import load_model
+from other.utils import load_model
 
 llm = LLM(model=load_model("meta-llama/Meta-Llama-3-8B-Instruct", model_path="/netscratch/thomas/models/"))
 sampling_params = SamplingParams(temperature=0.5, max_tokens=3000)

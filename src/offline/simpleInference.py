@@ -1,6 +1,6 @@
 from vllm import LLM, SamplingParams
 
-from src.other.utils import load_model
+from other.utils import load_model
 
 cache_dir = "/netscratch/thomas/models/" #TODO Please change to your local directory on the cluster
 model_name ="google/gemma-2-9b-it" # Please change to the model you want to use
