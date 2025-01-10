@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from typing import List, Optional, Union
 from enum import Enum
 from vllm.sampling_params import GuidedDecodingParams
-from utils import load_model
+from other.utils import load_model
 
 
 cache_dir = "/netscratch/thomas/models/" #TODO Please change to your local directory on the cluster
