@@ -48,6 +48,41 @@ This method helps you in loading huggingface models and stroring them to your sp
 
 ### Start service
 
+#### When in local mode (requires GPU)
+```bash
+vllm serve Qwen/Qwen2.5-1.5B-Instruct
+```
+
+#### On DFKI-cluster
+```bash
+srun --partition=RTXA6000-SLT \
+     --job-name=vllm_serve \
+     --nodes=1 \
+     --ntasks=1 \
+     --cpus-per-task=6 \
+     --gpus-per-task=1 \
+     --mem-per-cpu=4G \
+     --time=1-00:00:00 \
+     vllm serve "Qwen/Qwen2.5-1.5B-Instruct" \
+                --download-dir=/netscratch/thomas/vllm \
+                --port=8000
+```
+
+#TODO
+#ssh -L 5001:serv-9217:8000 <user>@login1.pegasus.kl.dfki.de
+
+### Access services using curl
+
+```bash
+curl http://serv-9219.kl.dfki.de:8000/v1/completions \
+    -H "Content-Type: application/json" \
+    -d '{
+        "model": "Qwen/Qwen2.5-1.5B-Instruct",
+        "prompt": "San Francisco is a",
+        "max_tokens": 7,
+        "temperature": 0
+    }'
+```
 ### Access services using generation-like endpoint
 
 ### Access services using completion-like endpoint
