@@ -15,7 +15,7 @@ quant_config = { "zero_point": True, "q_group_size": 128, "w_bit": 4, "version":
 
 # Load model
 model = AutoAWQForCausalLM.from_pretrained(
-    model_path, **{"low_cpu_mem_usage": True, "use_cache": False}
+    load_model(model_path, model_path=cache_dir), **{"low_cpu_mem_usage": True, "use_cache": False}
 )
 tokenizer = AutoTokenizer.from_pretrained(load_model(model_path, model_path=cache_dir), trust_remote_code=True)
 
