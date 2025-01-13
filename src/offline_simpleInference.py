@@ -7,7 +7,7 @@ def main():
     # Argument parser setup
     parser = argparse.ArgumentParser(description="Run text generation using an LLM.")
     parser.add_argument("--cache_dir", type=str, default="/path/to/your/models/", help="Path to the model cache directory.")
-    parser.add_argument("--model_name", type=str, defalt="google/gemma-2-9b-it", help="Name of the model to use.")
+    parser.add_argument("--model_name", type=str, default="google/gemma-2-9b-it", help="Name of the model to use.")
     parser.add_argument("--prompt", type=str, default="Write me a short story about a cat and a dog.", help="Prompt for text generation.")
     parser.add_argument("--temperature", type=float, default=0.8, help="Sampling temperature.")
     parser.add_argument("--top_p", type=float, default=0.95, help="Top-p (nucleus) sampling parameter.")
