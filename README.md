@@ -204,19 +204,36 @@ srun --partition=RTXA6000-SLT \
 
 ### 2. Retrieve the node name using
 Call this on the head node to get the list of your running jobs:
+
 ```bash
 squeue -u $USER
 ```
 Then, you can access the API documentation at the following endpoint (replace $NODE with the node name):
 http://$NODE.kl.dfki.de:8000/docs
 
-#### Optional: Forward port to local machine
-To be added.
-
 ### 3. Access service
 Replace $NODE with the node name.
 ```bash
 curl http://${NODE}.kl.dfki.de:8000/v1/completions \
+    -H "Content-Type: application/json" \
+    -d '{
+        "model": "Qwen/Qwen2.5-1.5B-Instruct",
+        "prompt": "San Francisco is a",
+        "max_tokens": 7,
+        "temperature": 0
+    }'
+```
+
+#### Optional: Forward port to local machine
+If you want to access the service from your local machine, you can forward the port using SSH.
+
+```bash
+ssh -L 5001:serv-9219:8000 thomas@login1.pegasus.kl.dfki.de
+```
+
+Then you can access the service on your local machine at `http://localhost:5001`.
+```bash
+curl http://localhost:5001/v1/completions \
     -H "Content-Type: application/json" \
     -d '{
         "model": "Qwen/Qwen2.5-1.5B-Instruct",
