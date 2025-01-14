@@ -174,7 +174,12 @@ To be added.
 You can also use vLLM in online mode.
 This starts a service on the cluster and you can access it via REST interface.
 
-### Start service
+**Steps:**
+1. Start the service 
+2. Retrieve the node name using `squeue -u $USER`.
+3. Access the service documentation at `http://$NODE.kl.dfki.de:8000/docs`.
+
+### 1. Start service
 
 #### When in local mode (requires GPU)
 ```bash
@@ -197,17 +202,18 @@ srun --partition=RTXA6000-SLT \
                 --port=8000
 ```
 
-First, you need to know the node your job is running on. Call this on the head node to get the list of your running jobs:
+### 2. Retrieve the node name using
+Call this on the head node to get the list of your running jobs:
 ```bash
 squeue -u $USER
 ```
 Then, you can access the API documentation at the following endpoint (replace $NODE with the node name):
-http://$NODE.kl.dfki.de:5000/docs
+http://$NODE.kl.dfki.de:8000/docs
 
 #### Optional: Forward port to local machine
 To be added.
 
-### Access services using curl
+### 3. Access service
 Replace $NODE with the node name.
 ```bash
 curl http://${NODE}.kl.dfki.de:8000/v1/completions \
@@ -224,4 +230,4 @@ curl http://${NODE}.kl.dfki.de:8000/v1/completions \
 Check the example in `online/remoteGeneration.py`.
 
 ### Access services using completion-like endpoint
-Check the example in `online/remoteChat.py`. 
+Check the example in `online/remoteChat.py`.
