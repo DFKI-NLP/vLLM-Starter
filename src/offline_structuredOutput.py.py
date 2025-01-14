@@ -1,9 +1,7 @@
 from vllm import LLM, SamplingParams
 from pydantic import BaseModel
-from typing import List, Optional, Union
 from enum import Enum
 from vllm.sampling_params import GuidedDecodingParams
-from other.utils import load_model
 
 
 cache_dir = "/netscratch/thomas/models/" #TODO Please change to your local directory on the cluster
@@ -34,7 +32,7 @@ sampling_params = SamplingParams(temperature=0.2,
 
 
 
-llm = LLM(model=load_model(model_name=model_name, model_path=cache_dir)) #Load your model
+llm = LLM(model=model_name) #Load your model
 sampling_params = SamplingParams(temperature=0.8, top_p=0.95, max_tokens=3000)
 outputs = llm.generate(prompt, sampling_params=sampling_params)
 for output in outputs:

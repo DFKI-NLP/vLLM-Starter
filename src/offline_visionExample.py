@@ -1,13 +1,11 @@
 import PIL
 from vllm import LLM, SamplingParams
 
-from other.utils import load_model
-
 data = PIL.Image.open("../data/example.jpg")
 model_name = "Qwen/Qwen2-VL-7B-Instruct"
 
 llm = LLM(
-    model=load_model(model_name,model_path="/netscratch/thomas/models/"),
+    model=model_name,
     max_num_seqs=5,
 )
 stop_token_ids = None
