@@ -1,12 +1,9 @@
 import argparse
 from vllm import LLM, SamplingParams
-from other.utils import load_model
-
 
 def main():
     # Argument parser setup
     parser = argparse.ArgumentParser(description="Run text generation using an LLM.")
-    parser.add_argument("--cache_dir", type=str, default="/netscratch/thomas/models/", help="Path to the model cache directory.")
     parser.add_argument("--model_name", type=str, default="google/gemma-2-9b-it", help="Name of the model to use.")
     parser.add_argument("--prompt", type=str, default="Write me a short story about a cat and a dog.", help="Prompt for text generation.")
     parser.add_argument("--temperature", type=float, default=0.8, help="Sampling temperature.")
@@ -16,8 +13,8 @@ def main():
     args = parser.parse_args()
 
     # Load the model
-    print(f"Loading model '{args.model_name}' from '{args.cache_dir}'...")
-    model = load_model(model_name=args.model_name, model_path=args.cache_dir)
+    print(f"Loading model '{args.model_name}'")
+    model =args.model_name
     llm = LLM(model=model)
 
     # Define sampling parameters
