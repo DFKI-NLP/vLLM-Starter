@@ -38,6 +38,7 @@ A very simple example of how to use vLLM in offline mode can be found in the fil
 This script loads a model and generates text based on a prompt.
 <details>
     <summary>Example</summary>
+
 ```bash
 srun --partition=RTXA6000-SLT \
      --job-name=vllm-test \
@@ -56,6 +57,7 @@ A more complex example can be found in the file `offline_chatstyle.py`.
 This script loads a model and generates text based on a **chat-style** prompt.
 <details>
     <summary>Example</summary>
+
 ```bash
 srun --partition=RTXA6000-SLT \
      --job-name=vllm-test \
@@ -76,6 +78,7 @@ For example, you can use regular expressions, JSON objects, grammar, or simple c
 The example can be found in the file `offline_structuredOutput.py`.
 <details>
     <summary>Example</summary>
+
 ```bash
 srun --partition=RTXA6000-SLT \
      --job-name=vllm-test \
@@ -95,6 +98,7 @@ Please check the official GitHub repository for the specific prompt-template and
 The example can be found in the file `offline_visionExample.py`, which loads the image in `data/example.jpg` and generates a caption for it.
 <details>
     <summary>Example</summary>
+
 ```bash
 srun --partition=RTXA6000-SLT \
      --job-name=vllm-test \
@@ -113,7 +117,20 @@ As we have seen in the previous example, vLLM requires for vision tasks the corr
 In the [original examples](https://github.com/vllm-project/vllm/blob/main/examples/offline_inference/vision_language.py) from the vLLM repository, 
 the code loads the LLM for each question. 
 I have modified the code to load the LLM only once and then use it for all questions.
-    
+<details>
+    <summary>Example</summary>
+
+```bash
+srun --partition=RTXA6000-SLT \
+     --job-name=vllm-test \
+     --nodes=1 \
+     --ntasks=1 \
+     --cpus-per-task=6 \
+     --gpus-per-task=1 \
+     --mem-per-cpu=4G \
+    python offline_visionImproved.py
+```
+</details>    
 
 ### Quantization example
 LLMs are known for their substantial size, which makes them highly memory-intensive. 
