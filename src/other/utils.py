@@ -1,7 +1,7 @@
 import os
 from huggingface_hub import snapshot_download
 
-def load_model(model_name: str, model_path: str) -> str:
+def load_model_deprecated(model_name: str, model_path: str) -> str:
     """
     Loads a model from a given path. If the model does not exist, downloads it.
 

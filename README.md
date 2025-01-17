@@ -2,10 +2,10 @@
 vLLM-Startercode
 
 You can use vLLM for offline and online use.
-Both have their advantages and disadvantages.
-The focus is on offline use, as online starts a service which might block resources on the cluster.
-Either way, you should store the LLM models (/netscratch/{$USER}), as it is a large file and might fill your personal storage very quickly.
-Please have a look at the offline/online use to see how this was solved.
+Offline allows you to load the model once and use it for your data.
+Online starts a service which you can use to generate text, similar to other endpoints like OpenAI's GPT.
+The focus of this tutorial is on offline use, as online starts a service which might block resources on the cluster.
+
 
 ## Installation
 ```bash
@@ -14,11 +14,22 @@ conda activate vLLM-Starter
 pip install vllm
 ```
 
+## Download LLM models
+You should store the LLM models at a central location, as they are large files and can be shared with other users.
+Currently, we use `/ds/models/llms/cache` as default location, as there are several LLMs already stored.
+In order to set this folder as the default location, you have to set the environment variable `HF_HUB_CACHE`.
+In the examples, we tell srun directly to use all environment variables plus the new one.
+
+```bash
+--export=ALL,HF_HUB_CACHE=/ds/models/hf-cache-slt/
+```
+
 ## Run script on cluster
 Please replace **{script.py}** with your script.
 ```bash
 srun --partition=RTXA6000-SLT \
      --job-name=vllm-test \
+    --export=ALL,HF_HUB_CACHE=/ds/models/hf-cache-slt/ \
      --nodes=1 \
      --ntasks=1 \
      --cpus-per-task=6 \
@@ -42,6 +53,7 @@ This script loads a model and generates text based on a prompt.
 ```bash
 srun --partition=RTXA6000-SLT \
      --job-name=vllm-test \
+     --export=ALL,HF_HUB_CACHE=/ds/models/hf-cache-slt/ \
      --nodes=1 \
      --ntasks=1 \
      --cpus-per-task=6 \
@@ -61,6 +73,7 @@ This script loads a model and generates text based on a **chat-style** prompt.
 ```bash
 srun --partition=RTXA6000-SLT \
      --job-name=vllm-test \
+     --export=ALL,HF_HUB_CACHE=/ds/models/hf-cache-slt/ \
      --nodes=1 \
      --ntasks=1 \
      --cpus-per-task=6 \
@@ -82,6 +95,7 @@ The example can be found in the file `offline_structuredOutput.py`.
 ```bash
 srun --partition=RTXA6000-SLT \
      --job-name=vllm-test \
+     --export=ALL,HF_HUB_CACHE=/ds/models/hf-cache-slt/ \
      --nodes=1 \
      --ntasks=1 \
      --cpus-per-task=6 \
@@ -102,6 +116,7 @@ The example can be found in the file `offline_visionExample.py`, which loads the
 ```bash
 srun --partition=RTXA6000-SLT \
      --job-name=vllm-test \
+     --export=ALL,HF_HUB_CACHE=/ds/models/hf-cache-slt/ \
      --nodes=1 \
      --ntasks=1 \
      --cpus-per-task=6 \
@@ -123,6 +138,7 @@ I have modified the code to load the LLM only once and then use it for all quest
 ```bash
 srun --partition=RTXA6000-SLT \
      --job-name=vllm-test \
+     --export=ALL,HF_HUB_CACHE=/ds/models/hf-cache-slt/ \
      --nodes=1 \
      --ntasks=1 \
      --cpus-per-task=6 \
@@ -154,9 +170,10 @@ pip install autoawq
 ```bash
 srun --partition=RTXA6000-SLT \
      --job-name=quantisation \
+     --export=ALL,HF_HUB_CACHE=/ds/models/hf-cache-slt/ \
      --nodes=1 \
      --ntasks=1 \
-    --gpus-per-task=1 \
+     --gpus-per-task=1 \
      --cpus-per-task=3 \
      --mem=50G \
      --time=1-00:00:00 \
@@ -165,7 +182,10 @@ srun --partition=RTXA6000-SLT \
 </details>
 
 ### Fine-tuning example
-To be added.
+```bash
+pip install unsloth
+```
+
 
 ### Classification example
 To be added.
