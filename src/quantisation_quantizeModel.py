@@ -1,5 +1,6 @@
 from awq import AutoAWQForCausalLM
 from transformers import AutoTokenizer
+import os
 
 
 model_path = 'mistralai/Mistral-7B-Instruct-v0.2'
@@ -15,6 +16,10 @@ tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
 
 # Quantize
 model.quantize(tokenizer, quant_config=quant_config)
+
+# GEnerate path to save the model and tokenizer
+hf_hub_cache = os.getenv("HF_HUB_CACHE")
+quant_model = os.path.join(hf_hub_cache, "quantized-model")
 
 # Save quantized model
 model.save_quantized(quant_model)
