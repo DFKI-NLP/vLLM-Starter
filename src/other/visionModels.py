@@ -93,7 +93,7 @@ class ChameleonLLM(BaseLLM):
 #Currently, does not work!
 class DeepseekVL2(BaseLLM):
     def __init__(self, model_name: str = "deepseek-ai/deepseek-vl2-tiny", **kwargs):
-        super().__init__(model_name)
+        super().__init__(model_name, **kwargs)
         self.max_model_len = kwargs.get("max_model_len", 4096)
         self.max_num_seqs = kwargs.get("max_num_seqs", 2)
         self.stop_token_ids = None  # Set stop_token_ids to None for Deepseek-VL2 models.
@@ -115,10 +115,11 @@ class DeepseekVL2(BaseLLM):
 
 class GLM4V(BaseLLM):
     def __init__(self, model_name: str = "THUDM/glm-4v-9b", **kwargs):
-        super().__init__(model_name)
+        super().__init__(model_name, **kwargs)
         self.max_model_len = kwargs.get("max_model_len", 2048)
         self.max_num_seqs = kwargs.get("max_num_seqs", 2)
         self.stop_token_ids = kwargs.get("stop_token_ids", [151329, 151336, 151338])
+        self.disable_mm_preprocessor_cache = kwargs.get("disable_mm_preprocessor_cache", False)
         self.load_model()  # Call load_model after all attributes are initialized.
 
     def load_model(self):
@@ -128,7 +129,7 @@ class GLM4V(BaseLLM):
             max_num_seqs=self.max_num_seqs,
             trust_remote_code=True,
             enforce_eager=True,
-            disable_mm_preprocessor_cache=self.kwargs.get("disable_mm_preprocessor_cache", False)
+            disable_mm_preprocessor_cache=self.disable_mm_preprocessor_cache
         )
 
     def construct_prompt(self, question: str) -> str:
