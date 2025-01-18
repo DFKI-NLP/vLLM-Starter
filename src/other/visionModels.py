@@ -133,7 +133,9 @@ class GLM4V(BaseLLM):
         )
 
     def construct_prompt(self, question: str) -> str:
-        return f"<|User|>: <image>\n{question}\n\n<|Assistant|>:"
+        return question
+
+#TODO "OpenGVLab/InternVL2-2B"
 
 class LLAVA(BaseLLM):
     def __init__(self, model_name: str = "llava-hf/llava-1.5-7b-hf"):
@@ -158,6 +160,25 @@ class LLAVANext(BaseLLM):
 
     def construct_prompt(self, question: str) -> str:
         return f"[INST] <image>\n{question} [/INST]"
+
+class Molmo(BaseLLM):
+    def __init__(self, model_name: str = "allenai/Molmo-7B-D-0924", **kwargs):
+        super().__init__(model_name, **kwargs)
+        self.stop_token_ids = None  # Set stop_token_ids to None as it's not specified
+        self.disable_mm_preprocessor_cache = kwargs.get("disable_mm_preprocessor_cache", False)
+        self.load_model()
+
+    def load_model(self):
+        self.llm = LLM(
+            model=self.model_name,
+            trust_remote_code=True,
+            dtype="bfloat16",
+            disable_mm_preprocessor_cache=self.disable_mm_preprocessor_cache
+        )
+
+    def construct_prompt(self, question: str) -> str:
+        return question
+
 
 class Qwen2VL(BaseLLM):
     def __init__(self, model_name: str = "Qwen/Qwen2-VL-7B-Instruct", max_num_seqs: int = 5):
