@@ -90,6 +90,7 @@ class ChameleonLLM(BaseLLM):
     def construct_prompt(self, question: str) -> str:
         return f"{question}<image>"
 
+#Currently, does not work!
 class DeepseekVL2(BaseLLM):
     def __init__(self, model_name: str = "deepseek-ai/deepseek-vl2-tiny", **kwargs):
         super().__init__(model_name, **kwargs)
@@ -107,6 +108,27 @@ class DeepseekVL2(BaseLLM):
             max_num_seqs=self.max_num_seqs,
             disable_mm_preprocessor_cache=self.disable_mm_preprocessor_cache,
             hf_overrides=self.hf_overrides
+        )
+
+    def construct_prompt(self, question: str) -> str:
+        return f"<|User|>: <image>\n{question}\n\n<|Assistant|>:"
+
+class GLM4V(BaseLLM):
+    def __init__(self, model_name: str = "THUDM/glm-4v-9b", **kwargs):
+        super().__init__(model_name, **kwargs)
+        self.max_model_len = kwargs.get("max_model_len", 2048)
+        self.max_num_seqs = kwargs.get("max_num_seqs", 2)
+        self.stop_token_ids = kwargs.get("stop_token_ids", [151329, 151336, 151338])
+        self.load_model()  # Call load_model after all attributes are initialized.
+
+    def load_model(self):
+        self.llm = LLM(
+            model=self.model_name,
+            max_model_len=self.max_model_len,
+            max_num_seqs=self.max_num_seqs,
+            trust_remote_code=True,
+            enforce_eager=True,
+            disable_mm_preprocessor_cache=self.kwargs.get("disable_mm_preprocessor_cache", False)
         )
 
     def construct_prompt(self, question: str) -> str:
