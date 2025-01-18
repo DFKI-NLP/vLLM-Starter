@@ -179,6 +179,20 @@ class Molmo(BaseLLM):
     def construct_prompt(self, question: str) -> str:
         return question
 
+#TODO Add "nvidia/NVLM-D-72B"
+
+class PaliGemma2(BaseLLM):
+    def __init__(self, model_name: str = "google/paligemma2-3b-ft-docci-448", **kwargs):
+        super().__init__(model_name, **kwargs)
+        self.stop_token_ids = None  # Set stop_token_ids to None as it's not specified
+        self.disable_mm_preprocessor_cache = kwargs.get("disable_mm_preprocessor_cache", False)
+        self.load_model()
+
+    def load_model(self):
+        self.llm = LLM(model=self.model_name, disable_mm_preprocessor_cache=self.disable_mm_preprocessor_cache)
+
+    def construct_prompt(self, question: str) -> str:
+        return "caption en"
 
 class Qwen2VL(BaseLLM):
     def __init__(self, model_name: str = "Qwen/Qwen2-VL-7B-Instruct", max_num_seqs: int = 5):
