@@ -2,9 +2,8 @@ from abc import ABC, abstractmethod
 from vllm import LLM, SamplingParams
 
 class BaseLLM(ABC):
-    def __init__(self, model_name: str, **kwargs):
+    def __init__(self, model_name: str):
         self.model_name = model_name
-        self.kwargs = kwargs  # Store additional arguments for subclasses
         self.llm = None
         self.stop_token_ids = None
 
@@ -54,10 +53,10 @@ class LLAVA(BaseLLM):
         return f"USER: <image>\n{question}\nASSISTANT:"
 
 class LLAVANext(BaseLLM):
-    def __init__(self, model_name: str = "llava-hf/llava-v1.6-mistral-7b-hf", **kwargs):
-        super().__init__(model_name, **kwargs)
+    def __init__(self, model_name: str = "llava-hf/llava-v1.6-mistral-7b-hf", max_model_len: int = 8192):
+        super().__init__(model_name)
         self.stop_token_ids = None  # Set stop_token_ids to None for LLAVA Next models.
-        self.max_model_len = kwargs.get("max_model_len", 8192)
+        self.max_model_len = max_model_len
         self.load_model()  # Call load_model after all attributes are initialized.
 
     def load_model(self):
@@ -67,10 +66,10 @@ class LLAVANext(BaseLLM):
         return f"[INST] <image>\n{question} [/INST]"
 
 class Qwen2VL(BaseLLM):
-    def __init__(self, model_name: str = "Qwen/Qwen2-VL-7B-Instruct", **kwargs):
-        super().__init__(model_name, **kwargs)
-        self.max_num_seqs = kwargs.get("max_num_seqs", 5)
-        self.stop_token_ids = kwargs.get("stop_token_ids", None)
+    def __init__(self, model_name: str = "Qwen/Qwen2-VL-7B-Instruct", max_num_seqs: int = 5):
+        super().__init__(model_name)
+        self.max_num_seqs = max_num_seqs
+        self.stop_token_ids = None
         self.load_model()  # Call load_model after all attributes are initialized.
 
     def load_model(self):
