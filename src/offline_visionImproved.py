@@ -2,19 +2,27 @@ from vllm import SamplingParams
 from vllm.assets.image import ImageAsset
 import argparse
 
-from other.visionModels import *
+from other.visionModels import Qwen2VL, LLAVA, LLAVANext
 
+# Argument parser
 parser = argparse.ArgumentParser(description="Run a specific LLM model.")
 parser.add_argument("--model", type=str, required=True, help="Name of the model to use (LLAVA, LLAVANext, Qwen2VL)")
+args = parser.parse_args()
 
-if parser.model == "QWEN2VL":
-    runner = Qwen2VL()
+# Model mapping
+model_mapping = {
+    "QWEN2VL": Qwen2VL,
+    "LLAVA": LLAVA,
+    "LLAVANEXT": LLAVANext
+}
 
-elif parser.model == "LLAVA":
-    runner = LLAVA()
+# Get the selected model class
+runner_class = model_mapping.get(args.model.upper())
 
-elif parser.model == "LLAVANEXT":
-    runner = LLAVANext()
+if runner_class is None:
+    raise ValueError(f"Unsupported model: {args.model}")
+
+runner = runner_class()
 
 #llava_runner = Qwen2VL(model_name = "Qwen/Qwen2-VL-7B-Instruct", model_path = "/netscratch/thomas/models/") #Load the model
 llm, prompt, stop_token_ids = runner.query("What is shown in the image?")
