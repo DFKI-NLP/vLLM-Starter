@@ -13,7 +13,7 @@ args = parser.parse_args()
 model_mapping = {
     "ARIA": AriaLLM,
     "CHAMELEON": ChameleonLLM,
-    "DeepseekVL2" : DeepseekVL2,
+    "DEEPSEEKVL2" : DeepseekVL2,
     "QWEN2VL": Qwen2VL,
     "LLAVA": LLAVA,
     "LLAVANEXT": LLAVANext,
