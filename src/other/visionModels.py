@@ -41,6 +41,57 @@ class BaseLLM(ABC):
     def get_model_name(self) -> str:
         return self.model_name
 
+class AriaLLM(BaseLLM):
+    def __init__(self, model_name: str = "rhymes-ai/Aria", **kwargs):
+        super().__init__(model_name, **kwargs)
+        self.tokenizer_mode = kwargs.get("tokenizer_mode", "slow")
+        self.dtype = kwargs.get("dtype", "bfloat16")
+        self.max_model_len = kwargs.get("max_model_len", 4096)
+        self.max_num_seqs = kwargs.get("max_num_seqs", 2)
+        self.trust_remote_code = kwargs.get("trust_remote_code", True)
+        self.disable_mm_preprocessor_cache = kwargs.get("disable_mm_preprocessor_cache", False)
+        self.stop_token_ids = kwargs.get(
+            "stop_token_ids", [93532, 93653, 944, 93421, 1019, 93653, 93519]
+        )
+        self.load_model()
+
+    def load_model(self):
+        self.llm = LLM(
+            model=self.model_name,
+            tokenizer_mode=self.tokenizer_mode,
+            dtype=self.dtype,
+            max_model_len=self.max_model_len,
+            max_num_seqs=self.max_num_seqs,
+            trust_remote_code=self.trust_remote_code,
+            disable_mm_preprocessor_cache=self.disable_mm_preprocessor_cache,
+        )
+
+    def construct_prompt(self, question: str) -> str:
+        return (f"<|im_start|>user\n<fim_prefix><|img|><fim_suffix>\n{question}"
+                "<|im_end|>\n<|im_start|>assistant\n")
+
+class ChameleonLLM(BaseLLM):
+    def __init__(self, model_name: str = "facebook/chameleon-7b", **kwargs):
+        super().__init__(model_name)
+        self.max_model_len = kwargs.get("max_model_len", 4096)
+        self.max_num_seqs = kwargs.get("max_num_seqs", 2)
+        self.disable_mm_preprocessor_cache = kwargs.get("disable_mm_preprocessor_cache", False)
+        self.load_model()  # Call load_model after all attributes are initialized.
+
+    def load_model(self):
+        # Initialize the LLM with the specified parameters.
+        self.llm = LLM(
+            model=self.model_name,
+            max_model_len=self.max_model_len,
+            max_num_seqs=self.max_num_seqs,
+            disable_mm_preprocessor_cache=self.disable_mm_preprocessor_cache
+        )
+
+    def construct_prompt(self, question: str) -> str:
+        return f"{question}<image>"
+
+
+
 class LLAVA(BaseLLM):
     def __init__(self, model_name: str = "llava-hf/llava-1.5-7b-hf"):
         super().__init__(model_name)
@@ -81,38 +132,4 @@ class Qwen2VL(BaseLLM):
                 f"{question}<|im_end|>\n"
                 "<|im_start|>assistant\n")
 
-class AriaLLM(BaseLLM):
-    def __init__(self, model_name: str = "rhymes-ai/Aria", **kwargs):
-        """
-        Initialize the AriaLLM instance with default and additional configurations.
 
-        Args:
-            model_name (str): The name of the model to load.
-            **kwargs: Additional arguments for model configuration.
-        """
-        super().__init__(model_name, **kwargs)
-        self.tokenizer_mode = kwargs.get("tokenizer_mode", "slow")
-        self.dtype = kwargs.get("dtype", "bfloat16")
-        self.max_model_len = kwargs.get("max_model_len", 4096)
-        self.max_num_seqs = kwargs.get("max_num_seqs", 2)
-        self.trust_remote_code = kwargs.get("trust_remote_code", True)
-        self.disable_mm_preprocessor_cache = kwargs.get("disable_mm_preprocessor_cache", False)
-        self.stop_token_ids = kwargs.get(
-            "stop_token_ids", [93532, 93653, 944, 93421, 1019, 93653, 93519]
-        )
-        self.load_model()
-
-    def load_model(self):
-        self.llm = LLM(
-            model=self.model_name,
-            tokenizer_mode=self.tokenizer_mode,
-            dtype=self.dtype,
-            max_model_len=self.max_model_len,
-            max_num_seqs=self.max_num_seqs,
-            trust_remote_code=self.trust_remote_code,
-            disable_mm_preprocessor_cache=self.disable_mm_preprocessor_cache,
-        )
-
-    def construct_prompt(self, question: str) -> str:
-        return (f"<|im_start|>user\n<fim_prefix><|img|><fim_suffix>\n{question}"
-                "<|im_end|>\n<|im_start|>assistant\n")

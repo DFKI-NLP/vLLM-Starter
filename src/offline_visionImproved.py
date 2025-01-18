@@ -2,7 +2,7 @@ from vllm import SamplingParams
 from vllm.assets.image import ImageAsset
 import argparse
 
-from other.visionModels import Qwen2VL, LLAVA, LLAVANext, AriaLLM
+from other.visionModels import Qwen2VL, LLAVA, LLAVANext, AriaLLM, ChameleonLLM
 
 # Argument parser
 parser = argparse.ArgumentParser(description="Run a specific LLM model.")
@@ -11,10 +11,12 @@ args = parser.parse_args()
 
 # Model mapping
 model_mapping = {
+    "ARIA": AriaLLM,
+    "CHAMELEON": ChameleonLLM,
     "QWEN2VL": Qwen2VL,
     "LLAVA": LLAVA,
     "LLAVANEXT": LLAVANext,
-    "ARIA" : AriaLLM
+
 }
 
 # Get the selected model class
