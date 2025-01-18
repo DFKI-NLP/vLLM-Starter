@@ -2,7 +2,8 @@ from vllm import SamplingParams
 from vllm.assets.image import ImageAsset
 import argparse
 
-from other.visionModels import Qwen2VL, LLAVA, LLAVANext, AriaLLM, ChameleonLLM, DeepseekVL2, GLM4V, Molmo, PaliGemma2
+from other.visionModels import Qwen2VL, LLAVA, LLAVANext, AriaLLM, ChameleonLLM, DeepseekVL2, GLM4V, Molmo, PaliGemma2, \
+    Phi3VisionLLM, PixtralHF
 
 # Argument parser
 parser = argparse.ArgumentParser(description="Run a specific LLM model.")
@@ -19,6 +20,8 @@ model_mapping = {
     "LLAVANEXT": LLAVANext,
     "MOLMO" : Molmo,
     "GEMMA":PaliGemma2,
+    "PHI3": Phi3VisionLLM,
+    "Pixtral": PixtralHF,
     "QWEN2VL": Qwen2VL,
 
 }

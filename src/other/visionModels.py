@@ -194,6 +194,49 @@ class PaliGemma2(BaseLLM):
     def construct_prompt(self, question: str) -> str:
         return "caption en"
 
+
+class Phi3VisionLLM(BaseLLM):
+    def __init__(self, model_name: str = "microsoft/Phi-3.5-vision-instruct", **kwargs):
+        super().__init__(model_name, **kwargs)
+        self.max_model_len = kwargs.get("max_model_len", 4096)
+        self.max_num_seqs = kwargs.get("max_num_seqs", 2)
+        self.mm_processor_kwargs = kwargs.get("mm_processor_kwargs", {"num_crops": 16})
+        self.disable_mm_preprocessor_cache = kwargs.get("disable_mm_preprocessor_cache", False)
+        self.load_model()  # Call load_model after all attributes are initialized.
+
+    def load_model(self):
+        # Initialize the LLM using the model name and relevant parameters.
+        self.llm = LLM(
+            model=self.model_name,
+            trust_remote_code=True,
+            max_model_len=self.max_model_len,
+            max_num_seqs=self.max_num_seqs,
+            mm_processor_kwargs=self.mm_processor_kwargs,
+            disable_mm_preprocessor_cache=self.disable_mm_preprocessor_cache,
+        )
+
+    def construct_prompt(self, question: str) -> str:
+        return f"<|user|>\n<|image_1|>\n{question}<|end|>\n<|assistant|>\n"
+
+class PixtralHF(BaseLLM):
+    def __init__(self, model_name: str = "mistral-community/pixtral-12b", **kwargs):
+        super().__init__(model_name, **kwargs)
+        self.max_model_len = kwargs.get("max_model_len", 8192)
+        self.max_num_seqs = kwargs.get("max_num_seqs", 2)
+        self.disable_mm_preprocessor_cache = kwargs.get("disable_mm_preprocessor_cache", False)
+        self.load_model()
+
+    def load_model(self):
+        self.llm = LLM(
+            model=self.model_name,
+            max_model_len=self.max_model_len,
+            max_num_seqs=self.max_num_seqs,
+            disable_mm_preprocessor_cache=self.disable_mm_preprocessor_cache,
+        )
+
+    def construct_prompt(self, question: str) -> str:
+        return f"<s>[INST]{question}\n[IMG][/INST]"
+
 class Qwen2VL(BaseLLM):
     def __init__(self, model_name: str = "Qwen/Qwen2-VL-7B-Instruct", max_num_seqs: int = 5):
         super().__init__(model_name)
