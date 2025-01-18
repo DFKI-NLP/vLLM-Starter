@@ -144,7 +144,7 @@ srun --partition=RTXA6000-SLT \
      --cpus-per-task=6 \
      --gpus-per-task=1 \
      --mem-per-cpu=4G \
-    python offline_visionImproved.py
+    python offline_visionImproved.py --model=LLAVANext
 ```
 </details>    
 
