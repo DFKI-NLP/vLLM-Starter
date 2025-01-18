@@ -2,9 +2,8 @@ from abc import ABC, abstractmethod
 from vllm import LLM, SamplingParams
 
 class BaseLLM(ABC):
-    def __init__(self, model_name: str, model_path: str = "/netscratch/thomas/models/", **kwargs):
+    def __init__(self, model_name: str, **kwargs):
         self.model_name = model_name
-        self.model_path = model_path
         self.kwargs = kwargs  # Store additional arguments for subclasses
         self.llm = None
         self.stop_token_ids = None
