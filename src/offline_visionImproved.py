@@ -21,7 +21,7 @@ model_mapping = {
     "MOLMO" : Molmo,
     "GEMMA":PaliGemma2,
     "PHI3": Phi3VisionLLM,
-    "Pixtral": PixtralHF,
+    "PIXTRAL": PixtralHF,
     "QWEN2VL": Qwen2VL,
 
 }
