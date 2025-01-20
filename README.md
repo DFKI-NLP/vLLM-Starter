@@ -59,7 +59,7 @@ srun --partition=RTXA6000-SLT \
 
 ### Chat-style example
 The following script demonstrates how to load a model and generate text based on a chat-style prompt. 
-You can find the more complex example in the file `offline_chatstyle.py`.
+You can find the more complex example in the file [offline_chatstyle.py](./src/offline_chatstyle.py).
 <details>
     <summary>Example</summary>
 
@@ -79,7 +79,7 @@ srun --partition=RTXA6000-SLT \
 ### Structured output example
 The `GuidedDecodingParams` class in vLLM allows you to define the output structure for tasks that require a predefined format, such as Named Entity Recognition (NER). 
 You can use various methods to guide the decoding process, including regular expressions, JSON objects, grammar, or simple binary choices.
-The example can be found in the file `offline_structuredOutput.py`.
+The example can be found in the file [offline_structuredOutput.py](./src/offline_structuredOutput.py).
 <details>
     <summary>Example</summary>
 
@@ -100,7 +100,7 @@ srun --partition=RTXA6000-SLT \
 vLLM can also be applied to vision tasks, such as generating captions for images. 
 When using vision LLMs, you have to use the specific prompt-template for the model and provide `stop_token_ids`.
 Please check the official GitHub repository for the specific prompt-template and `stop_token_ids` [here](https://github.com/vllm-project/vllm/blob/main/examples/offline_inference/vision_language.py).
-The example can be found in the file `offline_visionExample.py`, which loads the image in `data/example.jpg` and generates a caption for it.
+The example can be found in the file [offline_visionExample.py](./src/offline_visionExample.py), which loads the image in [data/example.jpg](./data/example.jpg) and generates a caption for it.
 <details>
     <summary>Example</summary>
 
@@ -183,8 +183,9 @@ pip install unsloth
 To be added.
 
 ## Online use
-You can also use vLLM in online mode.
-This starts a service on the cluster and you can access it via REST interface.
+You can also use vLLM in online/interactive mode.
+This mode starts a service on the cluster, which you can access via a REST interface.
+This is similar to the tutorial from [perseus-textgen](https://github.com/DFKI-NLP/perseus-textgen), but in my personal experience less brittle.
 
 **Steps:**
 1. Start the service 
