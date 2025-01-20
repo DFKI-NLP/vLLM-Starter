@@ -38,7 +38,7 @@ srun --partition=RTXA6000-SLT \
 ## Offline use
 
 ### Simple example
-A simple example demonstrating how to use vLLM in offline mode can be found in the file `offline_simpleInference.py`. 
+A simple example demonstrating how to use vLLM in offline mode can be found in the file [offline_simpleInference.py](./src/offline_simpleInference.py). 
 This script loads a model and generates text based on a prompt.
 <details>
     <summary>Example</summary>
