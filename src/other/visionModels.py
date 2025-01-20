@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from vllm import LLM, SamplingParams
+from vllm import LLM
 
 class BaseLLM(ABC):
     def __init__(self, model_name: str):
@@ -254,3 +254,18 @@ class Qwen2VL(BaseLLM):
                 "<|im_start|>assistant\n")
 
 
+# Model mapping
+model_mapping = {
+    "ARIA": AriaLLM,
+    "CHAMELEON": ChameleonLLM,
+    "DEEPSEEKVL2" : DeepseekVL2,
+    "GLM4V": GLM4V,
+    "LLAVA": LLAVA,
+    "LLAVANEXT": LLAVANext,
+    "MOLMO" : Molmo,
+    "GEMMA":PaliGemma2,
+    "PHI3": Phi3VisionLLM,
+    "PIXTRAL": PixtralHF,
+    "QWEN2VL": Qwen2VL,
+
+}

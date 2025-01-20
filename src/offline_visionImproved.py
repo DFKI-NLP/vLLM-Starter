@@ -2,8 +2,7 @@ from vllm import SamplingParams
 from vllm.assets.image import ImageAsset
 import argparse
 
-from other.visionModels import Qwen2VL, LLAVA, LLAVANext, AriaLLM, ChameleonLLM, DeepseekVL2, GLM4V, Molmo, PaliGemma2, \
-    Phi3VisionLLM, PixtralHF
+from other.visionModels import model_mapping
 
 # Argument parser
 parser = argparse.ArgumentParser(description="Run a specific LLM model.")
@@ -11,21 +10,7 @@ parser.add_argument("--model", type=str, required=True, help="Name of the model 
 parser.add_argument("--model-name", type=str, required=False, help="Name of the specific model")
 args = parser.parse_args()
 
-# Model mapping
-model_mapping = {
-    "ARIA": AriaLLM,
-    "CHAMELEON": ChameleonLLM,
-    "DEEPSEEKVL2" : DeepseekVL2,
-    "GLM4V": GLM4V,
-    "LLAVA": LLAVA,
-    "LLAVANEXT": LLAVANext,
-    "MOLMO" : Molmo,
-    "GEMMA":PaliGemma2,
-    "PHI3": Phi3VisionLLM,
-    "PIXTRAL": PixtralHF,
-    "QWEN2VL": Qwen2VL,
 
-}
 
 # Get the selected model class
 runner_class = model_mapping.get(args.model.upper())
