@@ -8,6 +8,7 @@ from other.visionModels import Qwen2VL, LLAVA, LLAVANext, AriaLLM, ChameleonLLM,
 # Argument parser
 parser = argparse.ArgumentParser(description="Run a specific LLM model.")
 parser.add_argument("--model", type=str, required=True, help="Name of the model to use (LLAVA, LLAVANext, Qwen2VL)")
+parser.add_argument("--model-name", type=str, required=False, help="Name of the specific model")
 args = parser.parse_args()
 
 # Model mapping
@@ -32,7 +33,11 @@ runner_class = model_mapping.get(args.model.upper())
 if runner_class is None:
     raise ValueError(f"Unsupported model: {args.model}")
 
-runner = runner_class()
+if args.model_name is not None:
+    runner = runner_class(model_name=args.model_name)
+
+else:
+    runner = runner_class()
 
 #llava_runner = Qwen2VL(model_name = "Qwen/Qwen2-VL-7B-Instruct", model_path = "/netscratch/thomas/models/") #Load the model
 llm, prompt, stop_token_ids = runner.query("What is shown in the image?")
