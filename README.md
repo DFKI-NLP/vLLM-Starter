@@ -1,11 +1,11 @@
 # vLLM-Starter
-vLLM-Startercode
+This repository provides a starting point for using the vLLM library on the cluster.
+vLLM supports both offline and online usage:
 
-You can use vLLM for offline and online use.
-Offline allows you to load the model once and use it for your data.
-Online starts a service which you can use to generate text, similar to other endpoints like OpenAI's GPT.
-The focus of this tutorial is on offline use, as online starts a service which might block resources on the cluster.
+- **Offline Mode**: Load the model once and process your data locally.
+- **Online Mode**: Start a service to generate text via an endpoint, similar to OpenAI's GPT API.
 
+This guide focuses on **offline usage**, as the online service may block cluster resources.
 
 ## Installation
 ```bash
@@ -15,14 +15,10 @@ pip install vllm
 ```
 
 ## Download LLM models
-You should store the LLM models at a central location, as they are large files and can be shared with other users.
-Currently, we use `/ds/models/llms/cache` as default location, as there are several LLMs already stored.
-In order to set this folder as the default location, you have to set the environment variable `HF_HUB_CACHE`.
-In the examples, we tell srun directly to use all environment variables plus the new one.
-
-```bash
---export=ALL,HF_HUB_CACHE=/ds/models/hf-cache-slt/
-```
+It is recommended to store the LLM models in a central location, as these large files can be shared across different users.
+By default, we use `/ds/models/llms/cache` as the storage location, where several LLMs are already stored. 
+To set this directory as the default cache location, you need to configure the environment variable `HF_HUB_CACHE`.
+In the examples we define the cache location in the srun command.
 
 ## Run script on cluster
 Please replace **{script.py}** with your script.
@@ -41,11 +37,8 @@ srun --partition=RTXA6000-SLT \
 
 ## Offline use
 
-Please see the method `load_model` in the `other/utils` folder. 
-This method helps you in loading Hugging Face models and storing them to your specified directory.
-
 ### Simple example
-A very simple example of how to use vLLM in offline mode can be found in the file `offline_simpleInference.py`.
+A simple example demonstrating how to use vLLM in offline mode can be found in the file `offline_simpleInference.py`. 
 This script loads a model and generates text based on a prompt.
 <details>
     <summary>Example</summary>
@@ -65,8 +58,8 @@ srun --partition=RTXA6000-SLT \
 
 
 ### Chat-style example
-A more complex example can be found in the file `offline_chatstyle.py`.
-This script loads a model and generates text based on a **chat-style** prompt.
+The following script demonstrates how to load a model and generate text based on a chat-style prompt. 
+You can find the more complex example in the file `offline_chatstyle.py`.
 <details>
     <summary>Example</summary>
 
@@ -84,10 +77,8 @@ srun --partition=RTXA6000-SLT \
 </details>
 
 ### Structured output example
-For some tasks, you might want to have a structured output.
-Examples are tasks like named entity recognition, where you want to define the output structure.
-The vLLM class `GuidedDecodingParams` allows a variety of options to guide the decoding process.
-For example, you can use regular expressions, JSON objects, grammar, or simple choices (e.g., True/False) to guide the decoding process.
+The `GuidedDecodingParams` class in vLLM allows you to define the output structure for tasks that require a predefined format, such as Named Entity Recognition (NER). 
+You can use various methods to guide the decoding process, including regular expressions, JSON objects, grammar, or simple binary choices.
 The example can be found in the file `offline_structuredOutput.py`.
 <details>
     <summary>Example</summary>
@@ -106,7 +97,7 @@ srun --partition=RTXA6000-SLT \
 </details>
 
 ### Vision example
-You can also use vLLM for vision tasks.
+vLLM can also be applied to vision tasks, such as generating captions for images. 
 When using vision LLMs, you have to use the specific prompt-template for the model and provide `stop_token_ids`.
 Please check the official GitHub repository for the specific prompt-template and `stop_token_ids` [here](https://github.com/vllm-project/vllm/blob/main/examples/offline_inference/vision_language.py).
 The example can be found in the file `offline_visionExample.py`, which loads the image in `data/example.jpg` and generates a caption for it.
@@ -182,6 +173,7 @@ srun --partition=RTXA6000-SLT \
 </details>
 
 ### Fine-tuning example
+To be added.
 ```bash
 pip install unsloth
 ```
