@@ -9,13 +9,15 @@ def main():
     parser.add_argument("--temperature", type=float, default=0.8, help="Sampling temperature.")
     parser.add_argument("--top_p", type=float, default=0.95, help="Top-p (nucleus) sampling parameter.")
     parser.add_argument("--max_tokens", type=int, default=3000, help="Maximum number of tokens to generate.")
+    parser.add_argument("--trust-remote-code", type=bool, default=False, help="Allow remote code execution.")
+    parser.add_argument("--tensor_parallel_size", type=int, default=1, help="Number of tensor parallel partitions.")
 
     args = parser.parse_args()
 
     # Load the model
     print(f"Loading model '{args.model_name}'")
     model =args.model_name
-    llm = LLM(model=model)
+    llm = LLM(model=model, trust_remote_code=args.trust_remote_code, tensor_parallel_size=args.tensor_parallel_size)
 
     # Define sampling parameters
     sampling_params = SamplingParams(
