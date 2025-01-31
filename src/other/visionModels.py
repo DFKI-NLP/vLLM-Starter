@@ -211,7 +211,7 @@ class Phi3VisionLLM(BaseLLM):
             trust_remote_code=True,
             max_model_len=self.max_model_len,
             max_num_seqs=self.max_num_seqs,
-            mm_processor_kwargs=self.mm_processor_kwargs,
+            mm_processor_kwargs={"num_crops": 16},
             disable_mm_preprocessor_cache=self.disable_mm_preprocessor_cache,
         )
 
