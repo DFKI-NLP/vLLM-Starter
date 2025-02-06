@@ -183,7 +183,9 @@ pip install unsloth
 To be added.
 
 ## Online use
-You can also use vLLM in online/interactive mode.
+You can also use vLLM in online/interactive mode. 
+As previously mentioned, this mode is not recommended for production use, but it is useful for testing and debugging.
+Please ensure that you shutdown the service after you are done with it, as it consumes allocated resources even when not in use.
 This mode starts a service on the cluster, which you can access via a REST interface.
 This is similar to the tutorial from [perseus-textgen](https://github.com/DFKI-NLP/perseus-textgen), but in my personal experience less brittle.
 
@@ -211,7 +213,7 @@ srun --partition=RTXA6000-SLT \
      --mem-per-cpu=4G \
      --time=1-00:00:00 \
      vllm serve "Qwen/Qwen2.5-1.5B-Instruct" \
-                --download-dir=/netscratch/thomas/vllm \
+                --download-dir=/ds/models/llms/cache \
                 --port=8000
 ```
 
@@ -241,7 +243,7 @@ curl http://${NODE}.kl.dfki.de:8000/v1/completions \
 If you want to access the service from your local machine, you can forward the port using SSH.
 
 ```bash
-ssh -L 5001:serv-9219:8000 thomas@login1.pegasus.kl.dfki.de
+ssh -L 5001:<$NODE>:8000 <username>@<loginnode>
 ```
 
 Then you can access the service on your local machine at `http://localhost:5001`.
