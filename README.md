@@ -215,7 +215,7 @@ cmake --build build --config Release
 ./build/bin/llama-gguf-split --merge ~/deepseek/DeepSeek-V3-Q2_K_XS/DeepSeek-V3-Q2_K_XS-00001-of-00005.gguf ~/deepseek/oneModel/output.gguf
 ```
 
-You can find the final model here: /ds/models/hf-cache-slt/deepseek/DeepSeek-R1.gguf
+You can find the DeepSeek-R1 model here: `/ds/models/hf-cache-slt/deepseek/DeepSeek-R1.gguf`
 
 #### Step 3: DeepSeek specific things
 There are some DeepSeek specific changes for this project, following this pull-request https://github.com/vllm-project/vllm/pull/13167:
@@ -226,7 +226,8 @@ pip install vllm --pre --extra-index-url https://wheels.vllm.ai/nightly
 ```
 
 ##### 3.2: Download additionally needed files
-You can find the additional files here: /ds/models/hf-cache-slt/deepseek/deepseek-config
+No need to download. 
+All these files can be found here: `/ds/models/hf-cache-slt/deepseek/deepseek-config`
 
 From: https://huggingface.co/deepseek-ai/DeepSeek-R1/tree/main
 - generation_config.json
@@ -247,7 +248,8 @@ export VLLM_MLA_DISABLE=1
 ```
 
 #### Step 4: Run the model
-For running deepseek, please use this code. However, for regular models you can provide the GGUF-model to the Simple example script.
+For running DeepSeek-R1, please use this code and disable MLA. 
+However, for regular models you can provide the GGUF-model to the Simple example script.
 ```bash
 srun --partition=H100 \
      --job-name=deepseek-r1 \
