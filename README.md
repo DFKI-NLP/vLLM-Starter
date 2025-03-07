@@ -173,14 +173,94 @@ srun --partition=RTXA6000-SLT \
 </details>
 
 ### Fine-tuning example
-To be added.
+I followed the tutorial from [Maxime Labonne](https://huggingface.co/blog/mlabonne/sft-llama3) to fine tune a Llama 3.1 model on the [Tome-100k dataset](https://huggingface.co/datasets/mlabonne/FineTome-100k).
+
 ```bash
-pip install unsloth
+pip install "unsloth[colab-new] @ git+https://github.com/unslothai/unsloth.git"
+pip install --no-deps "xformers<0.0.27" "trl<0.9.0" peft accelerate bitsandbytes
 ```
 
 
 ### Classification example
 To be added.
+
+### How to Run a Multi-GGUF Model (e.g., DeepSeek)
+vLLM currently supports only single-GGUF models.
+To use multi-GGUF models, you need to download the individual GGUF files and merge them into a single file.
+This tutorial uses DeepSeek-R1 with 671B parameters as an example.
+
+<details>
+  <summary>DeepSeek Tutorial</summary>
+
+#### Step 1: Download the GGUF files
+```bash
+huggingface-cli download "unsloth/DeepSeek-R1-Q2_K" --local-dir /ds/models/hf-cache-slt/ --include='*-Q2_K-*'
+```
+
+#### Step 2: Convert to a single GGUF model
+To merge GGUF files, we'll use LLAMA.cpp:
+
+> **Note:** I was unable to run LLAMA.cpp on our cluster and had to perform the merging on a local machine. 
+The resulting GGUF file was then transferred using rsync.. 
+If you manage to get GGUF-merging working on the cluster, please submit a pull request.
+
+```bash
+# Clone and build LLAMA.cpp
+git clone https://github.com/ggerganov/llama.cpp
+cd llama.cpp
+cmake -B build
+cmake --build build --config Release
+
+# Merge the GGUF files
+./build/bin/llama-gguf-split --merge ~/deepseek/DeepSeek-V3-Q2_K_XS/DeepSeek-V3-Q2_K_XS-00001-of-00005.gguf ~/deepseek/oneModel/output.gguf
+```
+
+You can find the final model here: /ds/models/hf-cache-slt/deepseek/DeepSeek-R1.gguf
+
+#### Step 3: DeepSeek specific things
+There are some DeepSeek specific changes for this project, following this pull-request https://github.com/vllm-project/vllm/pull/13167:
+
+##### 3.1: Install vLLM nightly build
+```bash
+pip install vllm --pre --extra-index-url https://wheels.vllm.ai/nightly
+```
+
+##### 3.2: Download additionally needed files
+You can find the additional files here: /ds/models/hf-cache-slt/deepseek/deepseek-config
+
+From: https://huggingface.co/deepseek-ai/DeepSeek-R1/tree/main
+- generation_config.json
+- tokenizer_config.json
+- tokenizer.json
+- model.safetensors.index.json
+
+From: https://huggingface.co/unsloth/DeepSeek-R1-GGUF/tree/main
+- config.json
+- configuration_deepseek.py 
+- modeling_deepseek.py
+
+Don't forget to change torch_dtype in config.json
+
+##### 3.3: Disable MLA
+```bash
+export VLLM_MLA_DISABLE=1
+```
+
+#### Step 4: Run the model
+For running deepseek, please use this code. However, for regular models you can provide the GGUF-model to the Simple example script.
+```bash
+srun --partition=H100 \
+     --job-name=deepseek-r1 \
+     --export=ALL,HF_HUB_CACHE=/ds/models/hf-cache-slt/ \
+     --nodes=1 \
+     --ntasks=1 \
+     --gpus-per-task=4 \
+     --cpus-per-task=12 \
+     --mem=64G \
+     --time=1-00:00:00 \
+     python deepseek.py     
+```
+</details>
 
 ## Online use
 You can also use vLLM in online/interactive mode. 
