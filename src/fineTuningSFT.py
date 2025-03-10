@@ -31,10 +31,10 @@ import os
 # 1. Load model for PEFT
 max_seq_length = 2048
 model, tokenizer = FastLanguageModel.from_pretrained(
-    model_name="unsloth/Meta-Llama-3.1-8B",
+    model_name="unsloth/Meta-Llama-3.1-8B-Instruct",
     max_seq_length=max_seq_length,
-    load_in_4bit=True,
-    dtype=None,
+    load_in_4bit=False,
+    dtype=torch.bfloat16 if is_bfloat16_supported() else torch.float16,
     device_map="auto",  # Auto-allocate devices
 )
 
@@ -65,6 +65,9 @@ def apply_template(examples):
 
 dataset = load_dataset("mlabonne/FineTome-100k", split="train")
 dataset = dataset.map(apply_template, batched=True, remove_columns=dataset.column_names)
+
+print("Sample from dataset after template application:")
+print(dataset[0]["text"])
 
 # 3. Training
 trainer = SFTTrainer(
@@ -97,19 +100,30 @@ trainer.train()
 # 4. Load model for inference
 model = FastLanguageModel.for_inference(model)
 
+# Make sure you're using the same template format as during training
 messages = [{"from": "human", "value": "Is 9.11 larger than 9.9?"}]
-inputs = tokenizer.apply_chat_template(
-    messages, tokenize=True, add_generation_prompt=True, return_tensors="pt"
+prompt = tokenizer.apply_chat_template(
+    messages,
+    tokenize=False,  # First get the raw text
+    add_generation_prompt=True
+)
+print("Generated prompt:", prompt)  # Inspect the actual prompt
+
+# Tokenize the prompt
+inputs = tokenizer(prompt, return_tensors="pt").to("cuda" if torch.cuda.is_available() else "cpu")
+
+# Generate with appropriate parameters
+outputs = model.generate(
+    **inputs,
+    max_new_tokens=64,
+    temperature=0.0,
+    top_p=0.9,
+    do_sample=True
 )
 
-# Ensure tensor is moved to CUDA
-if torch.cuda.is_available():
-    inputs = inputs.to("cuda")
-
-text_streamer = TextStreamer(tokenizer)
-outputs = model.generate(input_ids = inputs, max_new_tokens = 2*4096, use_cache = True,
-                         temperature = 1.5, min_p = 0.1)
-response = tokenizer.batch_decode(outputs, skip_special_tokens = True)[0]
+# Decode only the new tokens, not the entire sequence
+response = tokenizer.decode(outputs[0][inputs.input_ids.shape[1]:], skip_special_tokens=True)
+print("Response:", response)
 
 print("Messages:")
 print(messages)
