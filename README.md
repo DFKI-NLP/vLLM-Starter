@@ -354,6 +354,8 @@ If you want to convert PDF documents
 
 
 ## Create a dedicated image (container-save directory)
+
+```bash
 srun \
     --ntasks=1 \
   --nodes=1 \
@@ -368,8 +370,11 @@ srun \
   --container-mounts="`pwd`":"`pwd`" \
   --container-workdir="`pwd`" \
   bash install.sh
+```
 
 ## Use the dedicated image to convert the PDF
+
+```bash
 srun -K \
   --job-name="olmocr" \
   --container-mounts=/netscratch:/netscratch,/ds:/ds,$HOME:$HOME \
@@ -382,3 +387,4 @@ srun -K \
   --time=04:00:00 \
   --mem=100GB \
   python -m olmocr.pipeline ./localworkspacell --pdfs olmocr/tests/gnarly_pdfs/horribleocr.pdf
+```
