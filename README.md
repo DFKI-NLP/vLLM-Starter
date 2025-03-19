@@ -345,3 +345,40 @@ Check the example in `online/remoteGeneration.py`.
 
 ### Access services using completion-like endpoint
 Check the example in `online/remoteChat.py`.
+
+
+# Linearize PDF documents using olmocr
+If you want to convert PDF documents
+
+
+
+
+## Create a dedicated image (container-save directory)
+srun \
+    --ntasks=1 \
+  --nodes=1 \
+  --gpus=1 \
+  --partition=L40S,H100,RTXA6000 \
+  --time=04:00:00 \
+  --immediate=3600 \
+--mem-per-cpu=18G \
+  --cpus-per-task=6 \
+  --container-image=/netscratch/enroot/nvcr.io_nvidia_pytorch_23.05-py3.sqsh \
+  --container-save=/netscratch/thomas/olmo.sqsh \
+  --container-mounts="`pwd`":"`pwd`" \
+  --container-workdir="`pwd`" \
+  bash install.sh
+
+## Use the dedicated image to convert the PDF
+srun -K \
+  --job-name="olmocr" \
+  --container-mounts=/netscratch:/netscratch,/ds:/ds,$HOME:$HOME \
+  --container-workdir="$(pwd)" \
+  --container-image=/netscratch/thomas/olmo.sqsh\
+  --ntasks=1 \
+  --nodes=1 \
+  --gpus=1 \
+  --partition=L40S,H100,RTXA6000 \
+  --time=04:00:00 \
+  --mem=100GB \
+  python -m olmocr.pipeline ./localworkspacell --pdfs olmocr/tests/gnarly_pdfs/horribleocr.pdf
