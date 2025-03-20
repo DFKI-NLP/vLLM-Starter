@@ -174,7 +174,7 @@ srun --partition=RTXA6000-SLT \
 
 ### Fine-tuning example
 I followed the  [unsloth tutorial](https://colab.research.google.com/github/unslothai/notebooks/blob/main/nb/Llama3.2_(1B_and_3B)-Conversational.ipynb) to fine tune a Llama 3.2 model on the [Tome-100k dataset](https://huggingface.co/datasets/mlabonne/FineTome-100k).
-The current example is a simple fine-tuning example, which can be found in  [fineTuningSFT.py](fineTuningSFT.py).
+The current example is a simple fine-tuning example, which can be found in  [fineTuningSFT.py](./src/fineTuningSFT.py).
 Training is currently only 60 steps and the model is saved to the `/ds/models/hf-cache-slt/myAwesomeModel` directory.
 
 ```bash
@@ -184,7 +184,7 @@ pip install unsloth
 <details>
     <summary>Example</summary>
 
-Fine-Tuning:
+**Fine-Tuning:**
 ```bash
 srun --partition=RTXA6000-SLT \
      --job-name=fine-tuning \
@@ -197,7 +197,7 @@ srun --partition=RTXA6000-SLT \
     python offline_visionExample.py
 ```
 
-Inference using vLLM
+**Inference using vLLM**
 ```bash
 srun  --partition=RTXA6000 \
       --job-name=vllm-test \
@@ -212,6 +212,7 @@ srun  --partition=RTXA6000 \
 
 </details>
 
+### Vision fine-tuning example
 
 
 ### How to Run a Multi-GGUF Model (e.g., DeepSeek)
