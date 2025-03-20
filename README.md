@@ -173,16 +173,46 @@ srun --partition=RTXA6000-SLT \
 </details>
 
 ### Fine-tuning example
-I followed the tutorial from [Maxime Labonne](https://huggingface.co/blog/mlabonne/sft-llama3) to fine tune a Llama 3.1 model on the [Tome-100k dataset](https://huggingface.co/datasets/mlabonne/FineTome-100k).
+I followed the  [unsloth tutorial](https://colab.research.google.com/github/unslothai/notebooks/blob/main/nb/Llama3.2_(1B_and_3B)-Conversational.ipynb) to fine tune a Llama 3.2 model on the [Tome-100k dataset](https://huggingface.co/datasets/mlabonne/FineTome-100k).
+The current example is a simple fine-tuning example, which can be found in  [fineTuningSFT.py](fineTuningSFT.py).
+Training is currently only 60 steps and the model is saved to the `/ds/models/hf-cache-slt/myAwesomeModel` directory.
 
 ```bash
-pip install "unsloth[colab-new] @ git+https://github.com/unslothai/unsloth.git"
-pip install --no-deps "xformers<0.0.27" "trl<0.9.0" peft accelerate bitsandbytes
+pip install unsloth
 ```
 
+<details>
+    <summary>Example</summary>
 
-### Classification example
-To be added.
+Fine-Tuning:
+```bash
+srun --partition=RTXA6000-SLT \
+     --job-name=fine-tuning \
+     --export=ALL,HF_HUB_CACHE=/ds/models/hf-cache-slt/ \
+     --nodes=1 \
+     --ntasks=1 \
+     --cpus-per-task=6 \
+     --gpus-per-task=1 \
+     --mem-per-cpu=4G \
+    python offline_visionExample.py
+```
+
+Inference using vLLM
+```bash
+srun  --partition=RTXA6000 \
+      --job-name=vllm-test \
+      --export=ALL,HF_HUB_CACHE=/ds/models/hf-cache-slt/ \
+      --nodes=1 \
+      --ntasks=1 \
+      --cpus-per-task=6 \
+      --gpus-per-task=1 \
+      --mem-per-cpu=4G \
+      python offline_simpleInference.py --model_name=/ds/models/hf-cache-slt/myAwesomeModel/ --prompt="Continue the fibonnaci sequence: 1, 1, 2, 3, 5, 8,
+```
+
+</details>
+
+
 
 ### How to Run a Multi-GGUF Model (e.g., DeepSeek)
 vLLM currently supports only single-GGUF models.
