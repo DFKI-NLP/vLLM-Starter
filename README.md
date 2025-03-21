@@ -172,7 +172,7 @@ srun --partition=RTXA6000-SLT \
 ```
 </details>
 
-### Fine-tuning example
+### LoRA-Fine-tuning example
 I followed the  [unsloth tutorial](https://colab.research.google.com/github/unslothai/notebooks/blob/main/nb/Llama3.2_(1B_and_3B)-Conversational.ipynb) to fine tune a Llama 3.2 model on the [Tome-100k dataset](https://huggingface.co/datasets/mlabonne/FineTome-100k).
 The current example is a simple fine-tuning example, which can be found in  [fineTuningSFT.py](./src/fineTuningSFT.py).
 Training is currently only 60 steps and the model is saved to the `/ds/models/hf-cache-slt/myAwesomeModel` directory.
@@ -212,7 +212,7 @@ srun  --partition=RTXA6000 \
 
 </details>
 
-### Vision fine-tuning example
+### LoRA-Vision fine-tuning example
 I followed the  [unsloth tutorial](https://colab.research.google.com/github/unslothai/notebooks/blob/main/nb/Qwen2_VL_(7B)-Vision.ipynb) to fine tune a Qwen2_VL model on the [LaTeX_OCR dataset](https://huggingface.co/datasets/linxy/LaTeX_OCR).
 The current example is a simple fine-tuning example, which can be found in  [fineTuningVision.py](./src/fineTuningVision.py).
 Training is currently only 60 steps and the model is saved to the `/ds/models/hf-cache-slt/myAwesomeVisionModel` directory.
