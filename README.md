@@ -188,7 +188,7 @@ pip install unsloth
 ```bash
 srun --partition=RTXA6000-SLT \
      --job-name=fine-tuning \
-     --export=ALL,HF_HUB_CACHE=/ds/models/hf-cache-slt/ \
+     --export=ALL,HF_HUB_CACHE=/ds/models/hf-cache-slt/,HF_DATASETS_CACHE=/ds/models/hf-cache-slt/ \
      --nodes=1 \
      --ntasks=1 \
      --cpus-per-task=6 \
@@ -213,6 +213,26 @@ srun  --partition=RTXA6000 \
 </details>
 
 ### Vision fine-tuning example
+I followed the  [unsloth tutorial](https://colab.research.google.com/github/unslothai/notebooks/blob/main/nb/Qwen2_VL_(7B)-Vision.ipynb) to fine tune a Qwen2_VL model on the [LaTeX_OCR dataset](https://huggingface.co/datasets/linxy/LaTeX_OCR).
+The current example is a simple fine-tuning example, which can be found in  [fineTuningVision.py](./src/fineTuningVision.py).
+Training is currently only 60 steps and the model is saved to the `/ds/models/hf-cache-slt/myAwesomeVisionModel` directory.
+
+<details>
+    <summary>Example</summary>
+
+```bash
+srun --partition=RTXA6000 \
+     --job-name=fine-tuning \
+     --export=ALL,HF_HUB_CACHE=/ds/models/hf-cache-slt/,HF_DATASETS_CACHE=/ds/models/hf-cache-slt/ \
+     --nodes=1 \
+     --ntasks=1 \
+     --cpus-per-task=6 \
+     --gpus-per-task=1 \
+     --mem-per-cpu=4G \
+    python fineTuningVision.py
+```
+</details>
+
 
 
 ### How to Run a Multi-GGUF Model (e.g., DeepSeek)
