@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=rolm-query
-#SBATCH --partition=A100-PCI
-#SBATCH --nodelist=serv-3316
+#SBATCH --partition=<PARTITION>
+#SBATCH --nodelist=<NODE>
 #SBATCH --cpus-per-task=2
 #SBATCH --mem-per-cpu=4G
 #SBATCH --time=00:10:00
