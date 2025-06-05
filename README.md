@@ -360,7 +360,7 @@ srun \
     --ntasks=1 \
   --nodes=1 \
   --gpus=1 \
-  --partition=L40S,H100,RTXA6000 \
+  --partition=L40S,A100-40GB,A100-80GB,H100,RTXA6000,H200,RTX3090,H100-SLT,RTXA6000-SLT \
   --time=04:00:00 \
   --immediate=3600 \
 --mem-per-cpu=18G \
@@ -383,7 +383,7 @@ srun -K \
   --ntasks=1 \
   --nodes=1 \
   --gpus=1 \
-  --partition=L40S,H100,RTXA6000 \
+  --partition=L40S,A100-40GB,A100-80GB,H100,RTXA6000,H200,RTX3090,H100-SLT,RTXA6000-SLT \
   --time=04:00:00 \
   --mem=100GB \
   python -m olmocr.pipeline ./localworkspacell --pdfs olmocr/tests/gnarly_pdfs/horribleocr.pdf
