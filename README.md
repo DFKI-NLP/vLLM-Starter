@@ -251,10 +251,8 @@ huggingface-cli download "unsloth/DeepSeek-R1-Q2_K" --local-dir /ds/models/hf-ca
 #### Step 2: Convert to a single GGUF model
 To merge GGUF files, we'll use LLAMA.cpp:
 
-> **Note:** I was unable to run LLAMA.cpp on our cluster and had to perform the merging on a local machine. 
-The resulting GGUF file was then transferred using rsync.. 
-If you manage to get GGUF-merging working on the cluster, please submit a pull request.
-
+> **Note:** The explanation below is for local usage. On the cluster you have to take a different approach.
+> 
 ```bash
 # Clone and build LLAMA.cpp
 git clone https://github.com/ggerganov/llama.cpp
@@ -268,6 +266,49 @@ cmake --build build --config Release
 
 You can find the DeepSeek-R1 model here: `/ds/models/hf-cache-slt/deepseek/DeepSeek-R1.gguf`
 
+> **Note:** On the cluster:
+First, build a new container using:
+
+```bash
+srun \
+    --ntasks=1 \
+  --nodes=1 \
+  --gpus=1 \
+  --partition=L40S,A100-40GB,A100-80GB,H100,RTXA6000,H200,RTX3090,H100-SLT,RTXA6000-SLT \
+  --time=04:00:00 \
+  --immediate=3600 \
+--mem-per-cpu=18G \
+  --cpus-per-task=6 \
+  --container-image=/netscratch/enroot/nvcr.io_nvidia_pytorch_23.05-py3.sqsh \
+  --container-save=/netscratch/thomas/llama_30.06.2025.sqsh\
+  --container-mounts="`pwd`":"`pwd`" \
+  --container-workdir="`pwd`" \
+  bash install.sh
+```
+
+The install.sh file simply contains:
+
+```bash
+#!/bin/bash
+
+
+apt-get update -y && apt-get install -y software-properties-common \
+            && add-apt-repository -y ppa:deadsnakes/ppa \
+                && apt-get -y update
+
+
+# Clone and build LLAMA.cpp
+git clone https://github.com/ggerganov/llama.cpp
+cd llama.cpp
+cmake -B build
+cmake --build build --config Release
+```
+
+The newly generated container(/netscratch/thomas/llama_30.06.2025.sqsh)  has now a working version of llama.cpp. You can call it by:
+
+```bash
+srun -K   --job-name="olmocr"   --container-mounts=/netscratch:/netscratch,/ds:/ds,$HOME:$HOME   --container-workdir="$(pwd)"   --container-image=/netscratch/thomas/llama_30.06.2025.sqsh   --ntasks=1   --nodes=1   --gpus=1   --partition=L40S,A100-40GB,A100-80GB,H100,RTXA6000,H200,RTX3090,H100-SLT,RTXA6000-SLT   --time=04:00:00   --mem=100GB   ./llama.cpp/build/bin/llama-gguf-split --merge ~/deepseek/DeepSeek-V3-Q2_K_XS/DeepSeek-V3-Q2_K_XS-00001-of-00005.gguf ~/deepseek/oneModel/output.gguf
+```
 #### Step 3: DeepSeek specific things
 There are some DeepSeek specific changes for this project, following this pull-request https://github.com/vllm-project/vllm/pull/13167:
 
