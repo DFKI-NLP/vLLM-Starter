@@ -1,5 +1,8 @@
 from vllm import LLM, SamplingParams
 import argparse
+import torch
+
+availableGPUs = torch.cuda.device_count()
 
 prompts = [
     "Hello, my name is",
@@ -21,7 +24,7 @@ args = parser.parse_args()
 model = args.model
 print(f"Loading model '{model}'")
 
-llm = LLM(model=model)
+llm = LLM(model=model, tensor_parallel_size=availableGPUs)
 
 outputs = llm.generate(prompts, sampling_params)
 
