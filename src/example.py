@@ -1,4 +1,5 @@
 from vllm import LLM, SamplingParams
+import argparse
 
 prompts = [
     "Hello, my name is",
@@ -8,7 +9,19 @@ prompts = [
 ]
 sampling_params = SamplingParams(temperature=0.8, top_p=0.95)
 
-llm = LLM(model="facebook/opt-125m")
+# Argument parser setup
+parser = argparse.ArgumentParser(description="Run vLLM model on sample prompts.")
+parser.add_argument(
+    "--model",
+    type=str,
+    default="facebook/opt-125m",
+    help="The name or path of the model to use (default: 'facebook/opt-125m')"
+)
+args = parser.parse_args()
+model = args.model
+print(f"Loading model '{model}'")
+
+llm = LLM(model=model)
 
 outputs = llm.generate(prompts, sampling_params)
 
