@@ -413,8 +413,13 @@ curl http://${NODE}.kl.dfki.de:8000/v1/completions \
     }'
 ```
 
-#### Optional: Forward port to local machine
-If you want to access the service from your local machine, you can forward the port using SSH.
+Please keep in mind that in order to call the remote model from your local machine, you need to do one of two things:
+
+#### Optional: Local to remote model calling - high enough port
+The VPN forwards all ports greater than 10 000. Therefore, starting vLLM on port 18 000 instead of 8 000 would be sufficient for local to remote calling.
+
+#### Optional: Local to remote model calling - SSH port forwarding
+In order to call the remote model from your local machine, you can forward the port using SSH.
 
 ```bash
 ssh -L 5001:<$NODE>:8000 <username>@<loginnode>
