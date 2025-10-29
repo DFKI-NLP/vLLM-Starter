@@ -247,6 +247,10 @@ This tutorial uses DeepSeek-R1 with 671B parameters as an example.
 ```bash
 huggingface-cli download "unsloth/DeepSeek-R1-Q2_K" --local-dir /ds/models/hf-cache-slt/ --include='*-Q2_K-*'
 ```
+or alternatively for V3.1
+```bash
+huggingface-cli download "unsloth/DeepSeek-V3.1-GGUF" --local-dir /ds/models/hf-cache-slt/ --include='*-Q2_K_XL*'
+```
 
 #### Step 2: Convert to a single GGUF model
 To merge GGUF files, we'll use LLAMA.cpp:
